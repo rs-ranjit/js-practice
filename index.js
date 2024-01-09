@@ -3,6 +3,8 @@ let health = 100;
 let gold = 50;
 let inventory = ["stick"];
 let weaponUsing = 0;
+let monsterHealth;
+let monsterName;
 
 const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
@@ -10,6 +12,9 @@ const button3 = document.querySelector("#button3");
 const xpText = document.querySelector("#xpText");
 const healthText = document.querySelector("#healthText");
 const goldText = document.querySelector("#goldText");
+const monsterStats = document.querySelector("#monsterStats");
+const monsterNameText = document.querySelector("#monsterName");
+const monsterHealthText = document.querySelector("#monsterHealth");
 
 const text = document.querySelector("#text");
 
@@ -42,6 +47,23 @@ const locations = [{
   text: "You are fighting a monster."
 },
 ]
+const monsters = [
+  {
+    name: "Slime",
+    health: 10,
+    level: 1
+},
+{
+  name: "Fanged beast",
+  health: 100,
+  level: 4
+},
+{
+  name: "Dragon",
+  health: 300,
+  level: 10
+}
+]
 
   button1.onclick = goStore;
   button2.onclick = goCave;
@@ -49,6 +71,7 @@ const locations = [{
   
 
   function update(location) {
+    monsterStats.style.display = "none";
     button1.innerText = location["button text"][0];
     button2.innerText = location["button text"][1];
     button3.innerText = location["button text"][2];
@@ -68,6 +91,22 @@ function goStore(){
 
 function goCave(){
  update(locations[2]);
+}
+
+function fightSlime(){
+  monsterName = 0;
+  fighting();
+}
+
+function fightBeast(){
+  monsterName = 1;
+  fighting();
+}
+function fighting(){
+  update(locations[3]);
+  monsterStats.style.display = "block";
+  monsterNameText.innerText = monsters[monsterName].name;
+  monsterHealthText.innerText = monsters[monsterName].health;
 }
 
 function buyHealth(){
@@ -95,19 +134,20 @@ function buyWeapon(){
 }
 
 function fightDragon(){
-  button1.innerText = "Attack";
-  button2.innerText = "Dodge";
-  button3.innerText = "Run";
-  text.innerText = "You are fighting the dragon";
-  monsterStats.style.display = "block";
+  monsterName = 2;
+  fighting();
 }
-function fightSlime(){
 
-}
-function fightBeast(){
-
-}
 function attack(){
-
+  monsterHealth = monsters[monsterName].health;
+  monsterHealth -= weapons[weaponUsing].power;
+  monsterHealthText.innerText = monsterHealth;
+  health -= Math.floor(monsters[monsterName].level + (Math.random()*10) );
+  healthText.innerText = health;
+  text.innerText = `You are attacking a ${monsters[monsterName].name}. The ${monsters[monsterName].name} is attacking you.`;
 }
-function dodge(){}
+function dodge(){
+  text.innerText = `You dodged the attack of ${monsters[monsterName].name}.`;
+}
+
+// console.log(health);
